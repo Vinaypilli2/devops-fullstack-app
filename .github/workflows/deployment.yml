@@ -39,10 +39,9 @@ jobs:
           echo "${{ secrets.GKE_SERVICE_ACCOUNT_KEY }}" | base64 --decode > $HOME/gcloud-key.json
           gcloud auth activate-service-account --key-file=$HOME/gcloud-key.json
           gcloud config set project ${{ secrets.PROJECT_ID }}
-          gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --zone ${{ secrets.GKE_ZONE }} --project ${{ secrets.PROJECT_ID }}
+          gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --zone ${{ secrets.GKE_ZONE }}
 
       # Step 6: Deploy to GKE
-      - name: Deploy to GKE
+      - name: Deploy Kubernetes manifests to GKE
         run: |
-          kubectl apply -f k8s/deployment.yaml
-          kubectl apply -f k8s/service.yaml
+          kubectl apply -f k8s/
