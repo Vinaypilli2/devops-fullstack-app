@@ -3,23 +3,23 @@ name: CI/CD Pipeline for Kubernetes
 on:
   push:
     branches:
-      - main  # Trigger on push to the main branch
+      - main  # Trigger on push to main branch
 
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repository
-      - name: Checkout repository
+      # Step 1: Checkout repo
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      # Step 2: Set up Docker Buildx (for multi-platform builds)
+      # Step 2: Set up Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
       # Step 3: Log in to Docker Hub
-      - name: Log in to Docker Hub
+      - name: Docker Login
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -33,23 +33,21 @@ jobs:
           docker push pillivinay/frontend:latest
           docker push pillivinay/backend:latest
 
-      # Step 5: Install GKE gcloud auth plugin
-      - name: Install GKE gcloud auth plugin
+      # Step 5: Install Google Cloud SDK and auth plugin
+      - name: Install Google Cloud SDK and GKE Auth Plugin
         run: |
-          # Install gcloud SDK if not already available
-          curl https://sdk.cloud.google.com | bash
-          source $HOME/google-cloud-sdk/path.bash.inc
+          sudo apt-get update && sudo apt-get install -y apt-transport-https ca-certificates gnupg
+          echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+          curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+          sudo apt-get update && sudo apt-get install -y google-cloud-sdk google-cloud-sdk-gke-gcloud-auth-plugin
 
-          # Install the GKE gcloud auth plugin
-          gcloud components install gke-gcloud-auth-plugin
-
-      # Step 6: Set up Google Cloud credentials
+      # Step 6: Authenticate and configure kubectl for GKE
       - name: Set up GKE credentials
         run: |
           echo "${{ secrets.GKE_SERVICE_ACCOUNT_KEY }}" | base64 --decode > $HOME/gcloud-key.json
           gcloud auth activate-service-account --key-file=$HOME/gcloud-key.json
           gcloud config set project ${{ secrets.PROJECT_ID }}
-          gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --zone ${{ secrets.GKE_ZONE }} --project ${{ secrets.PROJECT_ID }}
+          gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --zone ${{ secrets.GKE_ZONE }}
 
       # Step 7: Deploy to GKE
       - name: Deploy to GKE
