@@ -33,15 +33,26 @@ jobs:
           docker push pillivinay/frontend:latest
           docker push pillivinay/backend:latest
 
-      # Step 5: Set up Google Cloud credentials
+      # Step 5: Install GKE gcloud auth plugin
+      - name: Install GKE gcloud auth plugin
+        run: |
+          # Install gcloud SDK if not already available
+          curl https://sdk.cloud.google.com | bash
+          source $HOME/google-cloud-sdk/path.bash.inc
+
+          # Install the GKE gcloud auth plugin
+          gcloud components install gke-gcloud-auth-plugin
+
+      # Step 6: Set up Google Cloud credentials
       - name: Set up GKE credentials
         run: |
           echo "${{ secrets.GKE_SERVICE_ACCOUNT_KEY }}" | base64 --decode > $HOME/gcloud-key.json
           gcloud auth activate-service-account --key-file=$HOME/gcloud-key.json
           gcloud config set project ${{ secrets.PROJECT_ID }}
-          gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --zone ${{ secrets.GKE_ZONE }}
+          gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --zone ${{ secrets.GKE_ZONE }} --project ${{ secrets.PROJECT_ID }}
 
-      # Step 6: Deploy to GKE
-      - name: Deploy Kubernetes manifests to GKE
+      # Step 7: Deploy to GKE
+      - name: Deploy to GKE
         run: |
-          kubectl apply -f k8s/
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
