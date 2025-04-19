@@ -37,3 +37,16 @@ spec:
           image: pillivinay/backend:latest
           ports:
             - containerPort: 8080
+          env:
+            - name: DB_HOST
+              value: "postgres-service"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USER
+              value: "admin"
+            - name: DB_PASSWORD
+              value: "password"
+            - name: DB_NAME
+              value: "employees"
+            - name: ALLOWED_ORIGINS
+              value: "*"
