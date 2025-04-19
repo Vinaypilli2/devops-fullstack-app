@@ -52,5 +52,6 @@ jobs:
       # Step 7: Deploy to GKE
       - name: Deploy to GKE
         run: |
+          kubectl apply -f k8s/postgres.yaml
           kubectl apply -f k8s/deployment.yaml
           kubectl apply -f k8s/service.yaml
