@@ -28,17 +28,18 @@ jobs:
       # Step 4: Build and push Docker images
       - name: Build and Push Docker Images
         run: |
-          docker build -t pillivinay/frontend:latest ./frontend
+          docker build -t pillivinay/frontend:latest \
+            --build-arg REACT_APP_SERVER_URL=http://34.121.191.170:8080 ./frontend
           docker build -t pillivinay/backend:latest ./backend
           docker push pillivinay/frontend:latest
           docker push pillivinay/backend:latest
 
-      # Step 5: Install Google Cloud SDK and auth plugin
+      # Step 5: Install Google Cloud SDK and GKE Auth Plugin
       - name: Install Google Cloud SDK and GKE Auth Plugin
         run: |
           sudo apt-get update && sudo apt-get install -y apt-transport-https ca-certificates gnupg
           echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-          curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+          curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - 
           sudo apt-get update && sudo apt-get install -y google-cloud-sdk google-cloud-sdk-gke-gcloud-auth-plugin
 
       # Step 6: Authenticate and configure kubectl for GKE
