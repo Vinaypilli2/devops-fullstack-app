@@ -19,12 +19,12 @@ function App() {
     const [employeeDetails, setEmployeeDetails] = useState({name: '', employeeId: 0})
 
     async function fetchEmployees() {
-        const response = await axios.get(SERVER_URL);
+        const response = await axios.get(`${SERVER_URL}/employees`);
         setEmployees(response.data)
     }
 
     async function createEmployee() {
-        await axios.post(SERVER_URL, {
+        await axios.post(`${SERVER_URL}/employees`, {
             name: employeeDetails.name,
             employee_id: parseInt(employeeDetails.employeeId)
         })
