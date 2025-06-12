@@ -51,3 +51,4 @@ spec:
               value: "employees"
             - name: ALLOWED_ORIGINS
               value: "*"
+              
