@@ -19,7 +19,7 @@ spec:
             - containerPort: 80
           env:
             - name: REACT_APP_SERVER_URL
-              value: "http://34.100.236.235:8080/employees"
+              value: "http://34.100.236.235:8080"
 ---
 apiVersion: apps/v1
 kind: Deployment
