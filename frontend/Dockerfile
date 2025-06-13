@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Accept backend API URL as a build-time variable
 
-ENV REACT_APP_SERVER_URL=http://34.100.236.235:8080
+ENV REACT_APP_SERVER_URL http://34.100.236.235:8080
 
 # Copy package.json and install dependencies
 COPY package*.json ./
