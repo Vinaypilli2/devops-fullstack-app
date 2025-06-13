@@ -13,7 +13,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 // Base server URL from environment variable + endpoint
-const SERVER_URL = `${process.env.REACT_APP_SERVER_URL}/employees`;
+const SERVER_URL = `${process.env.REACT_APP_SERVER_URL}`;
 
 function App() {
     const [employees, setEmployees] = useState([]);
