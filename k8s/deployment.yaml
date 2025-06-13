@@ -17,7 +17,9 @@ spec:
           image: pillivinay/frontend:latest
           ports:
             - containerPort: 80
-            # Set the backend service URL here
+          env:
+            - name: REACT_APP_SERVER_URL
+              value: "http://34.100.236.235:8080"
 ---
 apiVersion: apps/v1
 kind: Deployment
