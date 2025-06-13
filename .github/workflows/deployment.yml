@@ -28,8 +28,7 @@ jobs:
       # Step 4: Build and push Docker images
       - name: Build and Push Docker Images
         run: |
-          docker build -t pillivinay/frontend:latest \
-            --build-arg REACT_APP_SERVER_URL=http://34.121.191.170:8080 ./frontend
+          docker build -t pillivinay/frontend:latest ./frontend
           docker build -t pillivinay/backend:latest ./backend
           docker push pillivinay/frontend:latest
           docker push pillivinay/backend:latest
